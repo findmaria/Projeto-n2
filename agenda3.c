@@ -3,9 +3,24 @@
 #include <string.h>
 #include <locale.h>
 
-#define TAM_NOME 100
+#define TAM_VET 100
 
 enum tipoEndereco {Alameda, Avenida, Praca, Rua, Travessa};
+enum tipoContato {Celular, comercial, fixo, pessoal, fax};
+enum tipoRedeSocial {Instagram, Facebook, Linkedin};
+
+struct registro{ 
+    char nome[ TAM_VET];
+    enum tipoContato TpCon;
+    char numero_tel [11];
+    enum tipoEndereco TpEnd;                    
+    char endereco [TAM_VET]; 
+    int numero;
+    enum tipoRedeSocial TpRS;
+    char RedeSocial;
+    char email [TAM_VET];
+}agenda[200];
+
 
 char *obterNomeEndereco ( enum tipoEndereco tpEnd )
 {
@@ -17,20 +32,13 @@ char *obterNomeEndereco ( enum tipoEndereco tpEnd )
     return ( nomeEndereco [ tpEnd ] );
 }
 
-struct registro{ 
-    char nome[ TAM_NOME];
-    char numero_tel [11];
-    char endereco [100]; 
-    enum tipoEndereco TpEnd;
-    int numero;
-    char email [50];
-}agenda[200];
-
 int menuAgenda (){
     int opcao;
-    printf ("Digite a opção que você deseja: \n");
+    printf ("MENU AGENDA\n");
     printf ("1 - Adicionar\n2 - Editar\n3 - Ver contato\n4 - Excluir\n5 - Ver agenda\n6 - Sair\n");
+    printf ("Digite sua opção: ");
     scanf("%i", &opcao);
+    //FUNÇÃO LIMPAR TELA
     return opcao;
 }
 
@@ -39,23 +47,38 @@ int criarContato (int *total){
         printf("Nome: ");
         fflush(stdin);
         scanf("%[^\n]s", agenda[*total].nome);
-    
-        printf("Número: ");
+
+        printf ("Tipo de Telefone: \n");
+        printf ("1 - Celular\n2 - Comercial\n3 - Fixo\n4 - Pessoal\n5 - Fax\n");
+        fflush (stdin);
+        scanf ("%i", &agenda[*total].TpCon);
+
+        printf("Número : ");
         fflush(stdin);
         scanf("%[^\n]s", agenda[*total].numero_tel);
 
         printf("Email: ");
         fflush(stdin);
         scanf("%[^\n]s", agenda[*total].email);
+        //STRTOK
+        printf ("Tipo de endereço: \n");
+        printf ("1 - Alameda\n2 - Avenida\n3 - Praça\n4 - Rua\n5 - Travessa\n");
+        printf ("Digite sua opção: ");
+        fflush (stdin);
+        scanf ("%i", &agenda[*total].TpEnd);
 
         printf("Endereço: ");
         fflush(stdin);
         scanf("%[^\n]s", agenda[*total].endereco);
 
-        printf ("Tipo de endereço: \n");
-        printf ("1 - Alameda\n2 - Avenida\n3 - Praça\n4 - Rua\n5 - Travessa\n");
+        printf ("Tipo de rede social: \n");
+        printf ("1 - Instagram\n2 - Facebook\n3 - Linkedln\n");
         fflush (stdin);
-        scanf ("%i", &agenda[*total].TpEnd);
+        scanf ("%i", &agenda[*total].TpRS);
+
+        printf ("Digite seu Username: ");
+        fflush(stdin);
+        scanf("%[^\n]s", agenda[*total].RedeSocial);
 
         (*total)++;
 }
@@ -69,7 +92,15 @@ void mostrarContatos (int *total){
         printf ("%s\n", agenda[i].email);
         printf ("%s %s\n",obterNomeEndereco(agenda[i].TpEnd), agenda[i].endereco);
     } 
+
 }
+
+
+char *obterNomeEndereco ( enum tipoEndereco tpEnd );
+int menuAgenda ();
+int criarContato (int *total);
+void mostrarContatos (int *total);
+
 
 int main (){
     setlocale (LC_ALL, "");
@@ -106,7 +137,10 @@ int main (){
         break;
     
     default:
+        printf ("Opção inválida!\n");
+        printf ("----------------------------\n");
         break;
     }
     }while (opcao != 6);
 }
+
