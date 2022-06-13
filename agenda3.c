@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h>
 
 #define TAM_NOME 100
 
@@ -27,18 +28,19 @@ struct registro{
 
 int menuAgenda (){
     int opcao;
-    printf ("1 - Adicionar\n2 - Editar\n3 - Ver contato\n4 - Excluir\n5 - Ver agenda\n");
+    printf ("Digite a opÃ§Ã£o que vocÃª deseja: \n");
+    printf ("1 - Adicionar\n2 - Editar\n3 - Ver contato\n4 - Excluir\n5 - Ver agenda\n6 - Sair\n");
     scanf("%i", &opcao);
     return opcao;
 }
 
 int criarContato (int *total){
-    //while (1){
+    
         printf("Nome: ");
         fflush(stdin);
         scanf("%[^\n]s", agenda[*total].nome);
     
-        printf("Número: ");
+        printf("NÃºmero: ");
         fflush(stdin);
         scanf("%[^\n]s", agenda[*total].numero_tel);
 
@@ -46,19 +48,16 @@ int criarContato (int *total){
         fflush(stdin);
         scanf("%[^\n]s", agenda[*total].email);
 
-        printf("Endereço: ");
+        printf("EndereÃ§o: ");
         fflush(stdin);
         scanf("%[^\n]s", agenda[*total].endereco);
 
-        printf ("Tipo de endereço: \n");
-        printf ("1 - Alameda\n2 - Avenida\n3 - Praça\n4 - Rua\n5 - Travessa\n");
+        printf ("Tipo de endereÃ§o: \n");
+        printf ("1 - Alameda\n2 - Avenida\n3 - PraÃ§a\n4 - Rua\n5 - Travessa\n");
         fflush (stdin);
         scanf ("%i", &agenda[*total].TpEnd);
 
-        //int tipoEnde (int tpEnd, int i);
-
         (*total)++;
-    //}
 }
 
 void mostrarContatos (int *total){
@@ -73,7 +72,41 @@ void mostrarContatos (int *total){
 }
 
 int main (){
-    int valor = 0;
-    criarContato (&valor);
-    mostrarContatos (&valor);
+    setlocale (LC_ALL, "");
+
+    int *total = 0, opcao;
+
+    do{
+    opcao = menuAgenda ();
+
+    switch (opcao)
+    {
+    case 1:
+        criarContato (&total);
+        break;
+
+    case 2:
+        
+        break;
+
+    case 3:
+        
+        break;
+
+    case 4:
+        
+        break;
+
+    case 5:
+        mostrarContatos (&total);
+        break;
+
+    case 6:
+        
+        break;
+    
+    default:
+        break;
+    }
+    }while (opcao != 6);
 }
