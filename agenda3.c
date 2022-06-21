@@ -226,11 +226,17 @@ void editarcontato (int total){
     }
 }
 
+
+char *obtertipodecont ( enum tipoContato TpCon );
 char *obterNomeEndereco ( enum tipoEndereco tpEnd );
+char *obterRede ( enum tipoRedeSocial TpRS );
 int menuAgenda ();
 void limparTela ();
 int criarContato (int *total);
 void mostrarContatos (int *total);
+int verificarNumero_Tel (char numero_tel[]);
+int verificarEmail (char email[]);
+void editarcontato (int total);
 
 
 int main (){
