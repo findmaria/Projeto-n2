@@ -17,7 +17,7 @@ struct registro{
     char endereco [TAM_VET]; 
     int numero;
     enum tipoRedeSocial TpRS;
-    char RedeSocial;
+    char RedeSocial[TAM_VET];
     char email [TAM_VET];
 }agenda[200];
 
@@ -69,7 +69,7 @@ void limparTela(void){
     #endif
     }
 
-int criarContato (int *total){
+void criarContato (int *total){
         int verificanum = 0, verificaemail = 0;
         
         printf("Nome: ");
@@ -116,13 +116,17 @@ int criarContato (int *total){
         printf ("Digite seu Username: ");
         fflush(stdin);
         scanf("%[^\n]s", agenda[*total].RedeSocial);
+        fflush(stdin);
+
 
         (*total)++;
+        
 }
 
 void mostrarContatos (int *total){
     int i;
-    for (i = 0; i < total; i++){
+
+    for (i = 0; i < *total; i++){
     
         printf ("%s\n", agenda[i].nome);
         printf ("%s:%s\n", obtertipodecont(agenda[i].TpCon), agenda[i].numero_tel);
@@ -132,6 +136,85 @@ void mostrarContatos (int *total){
     } 
 
 }
+
+
+void salvarArquivo(int total){
+
+    FILE *ptrArquivo;
+
+    ptrArquivo = fopen("dados.csv","w");
+
+    if(ptrArquivo == NULL){
+        printf("Erro!");   
+    }
+
+    for (int i = 0; i < total; i++){
+        fprintf(ptrArquivo, "%s;%i;%s;%s;%i;%s;%i;%s", agenda[i].nome,  agenda[i].TpCon, agenda[i].numero_tel, agenda[i].email, agenda[i].TpEnd, agenda[i].endereco, agenda[i].TpRS, agenda[i].RedeSocial);
+        fprintf(ptrArquivo, "\n");
+    }
+
+    fclose(ptrArquivo);
+
+}
+
+
+int lerArquivo(){
+
+    FILE *ptrArquivo = NULL;
+
+    char line[TAM_VET];
+
+    int aux;
+
+    int total = 0;
+    char *tok;
+
+
+    ptrArquivo = fopen("dados.csv","r");
+
+    if(ptrArquivo == NULL){
+        printf("Não há arquivos pra ler!\n");   
+        return 0;
+    }
+
+    while((fgets(line, sizeof(line), ptrArquivo)) != NULL){
+
+        tok = strtok(line, ";");
+        strcpy(agenda[total].nome, tok);
+
+        tok = strtok(NULL, ";");
+        aux = atoi(tok);
+        agenda[total].TpCon = aux;
+
+        tok = strtok(NULL, ";");
+        strcpy(agenda[total].numero_tel, tok);
+
+        tok = strtok(NULL, ";");
+        strcpy(agenda[total].email, tok);
+
+        tok = strtok(NULL, ";");
+        aux = atoi(tok);
+        agenda[total].TpEnd = aux;
+
+        tok = strtok(NULL, ";");
+        strcpy(agenda[total].endereco, tok);
+
+        tok = strtok(NULL, ";");
+        aux = atoi(tok);
+        agenda[total].TpRS = aux;
+
+        tok = strtok(NULL, ";");
+        strcpy(agenda[total].RedeSocial, tok);
+            
+        total++;
+    }
+
+    fclose(ptrArquivo);
+
+    return total;
+
+}
+
 
 int verificarNumero_Tel (char numero_tel[]){
     int i , aux;
@@ -153,8 +236,6 @@ int verificarNumero_Tel (char numero_tel[]){
         }
         return 1;
     }
-
-
 
 
 int verificarEmail (char email[]){
@@ -202,7 +283,7 @@ void editarcontato (int total){
         scanf("%s", nome);
 
         for (i = 0; i < total; i++){
-            comparacao = strcpm(nome, agenda[i].nome);
+            comparacao = strcmp(nome, agenda[i].nome);
             if (comparacao == 0){
                 printf ("%s\n", agenda[i].nome);
                 printf ("%s:%s\n", obtertipodecont(agenda[i].TpCon), agenda[i].numero_tel);
@@ -232,52 +313,61 @@ char *obterNomeEndereco ( enum tipoEndereco tpEnd );
 char *obterRede ( enum tipoRedeSocial TpRS );
 int menuAgenda ();
 void limparTela ();
-int criarContato (int *total);
+void criarContato (int *total);
 void mostrarContatos (int *total);
 int verificarNumero_Tel (char numero_tel[]);
 int verificarEmail (char email[]);
 void editarcontato (int total);
+void salvarArquivo (int total);
 
 
 int main (){
     setlocale (LC_ALL, "");
 
-    int *total = 0, opcao;
+    int total = lerArquivo();
+    int opcao = 0;
 
-    do{
-    opcao = menuAgenda ();
+    while(opcao != 6){
+        opcao = menuAgenda ();
 
-    switch (opcao)
-    {
-    case 1:
-        criarContato (&total);
-        break;
+        switch (opcao)
+        {
+        case 1:
+            criarContato (&total);
+            break;
 
-    case 2:
-        editarcontato(&total);
-        break;
+        case 2:
+            editarcontato(&total);
+            break;
 
-    case 3:
+        case 3:
+            
+            break;
+
+        case 4:
+            
+            break;
+
+        case 5:
+            mostrarContatos (&total);
+            break;
+
+        case 6:
+            
+            break;
         
-        break;
+        default:
+            printf ("Opção inválida!\n");
+            printf ("----------------------------\n");
+            break;
 
-    case 4:
-        
-        break;
+        }
 
-    case 5:
-        mostrarContatos (&total);
-        break;
-
-    case 6:
-        
-        break;
-    
-    default:
-        printf ("Opção inválida!\n");
-        printf ("----------------------------\n");
-        break;
     }
-    }while (opcao != 6);
+
+    
+    salvarArquivo(total);
+
+
     return 0;
 }
